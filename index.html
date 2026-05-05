@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontrei algo bizarro numa fita de 1995 - Threadit</title>
+    <style>
+        :root {
+            --bg-body: #030303;
+            --bg-card: #1a1a1b;
+            --bg-hover: #272729;
+            --text-main: #d7dadc;
+            --text-muted: #818384;
+            --accent: #ff4500;
+            --accent-upvote: #ff4500;
+            --accent-downvote: #7193ff;
+            --border: #343536;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -1px;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            background-color: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: white;
+        }
+
+        /* MAIN LAYOUT */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            display: flex;
+            gap: 24px;
+            padding: 0 15px;
+        }
+
+        .content {
+            flex-grow: 1;
+            max-width: 100%;
+        }
+
+        /* POST PRINCIPAL */
+        .post {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .vote-column {
+            background-color: rgba(0,0,0,0.2);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .vote-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .vote-btn:hover { color: var(--text-main); }
+        .vote-btn.upvoted { color: var(--accent-upvote); }
+
+        .vote-count {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 4px 0;
+            color: var(--text-main);
+        }
+
+        .post-content {
+            padding: 8px 16px 16px 16px;
+            width: 100%;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .community-name {
+            color: var(--text-main);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .post-body {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .post-body p {
+            margin-bottom: 10px;
+        }
+
+        /* LINK MISTERIOSO */
+        .creepy-link-box {
+            background-color: #0f0f0f;
+            border-left: 4px solid var(--accent);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .creepy-link {
+            color: #4da6ff;
+            text-decoration: none;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .creepy-link:hover {
+            text-decoration: underline;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .action-item:hover {
+            background-color: var(--bg-hover);
+        }
+
+        /* COMMENTS SECTION */
+        .comments-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .comments-header {
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment {
+            display: flex;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .comment-thread-line {
+            position: absolute;
+            top: 35px;
+            bottom: 0;
+            left: 15px;
+            width: 2px;
+            background-color: var(--border);
+        }
+
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-hover);
+            margin-right: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex-grow: 1;
+        }
+
+        .comment-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            color: var(--text-main);
+            font-weight: bold;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .comment-actions span {
+            cursor: pointer;
+        }
+        .comment-actions span:hover { color: var(--text-main); }
+
+        /* NESTED COMMENTS (Respostas) */
+        .reply {
+            margin-top: 16px;
+            margin-left: 20px;
+            border-left: 2px solid var(--border);
+            padding-left: 15px;
+        }
+
+        .deleted-comment {
+            color: var(--text-muted);
+            font-style: italic;
+            background-color: rgba(255,0,0,0.05);
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Thread<span>it</span></div>
+        <input type="text" class="search-bar" placeholder="Buscar no Threadit...">
+    </header>
+
+    <div class="container">
+        <div class="content">
+            
+            <div class="post">
+                <div class="vote-column">
+                    <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
+                    <span class="vote-count">1.4k</span>
+                    <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
+                </div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <a href="#" class="community-name">c/CoisasEstranhasDaInternet</a>
+                        <span>•</span>
+                        <span>Postado por u/Arquivo_Morto89 há 5 horas</span>
+                    </div>
+                    
+                    <h1 class="post-title">Estou digitalizando fitas VHS antigas de emissoras locais e encontrei algo que não deveria estar lá. Alguém lembra disso?</h1>
+                    
+                    <div class="post-body">
+                        <p>E aí, pessoal. Há alguns meses comecei um projeto pessoal de comprar caixas de fitas VHS antigas em feiras de garagem para digitalizar comerciais antigos, jornais e mídias perdidas.</p>
+                        <p>Ontem à noite, eu estava convertendo uma fita de 1995 que tinha uma gravação de um canal local (Canal 4). Parecia ser só um programa comum, mas do nada o sinal falha. No começo achei que a fita tinha mofado ou estragado, mas o que entrou no lugar da transmissão não é erro técnico.</p>
+                        <p>O áudio... tem uma voz estranha. E o texto que aparece na tela parece algum tipo de doutrina distorcida falando sobre "carne" e "Gênesis". A sensação que me deu assistindo isso sozinho de madrugada foi sufocante, como se o vídeo estivesse olhando de volta pra mim.</p>
+                        <p>Eu hospedei o trecho cortado. Por favor, alguém da região lembra de ter visto um sequestro de sinal parecido com isso na época?</p>
+                        
+                        <div class="creepy-link-box">
+                            <a href="COLOQUE_SEU_LINK_AQUI" target="_blank" class="creepy-link">
+                                [LINK DA GRAVAÇÃO] acessar_arquivo_vhs_canal4.html
+                            </a>
+                        </div>
+                        
+                        <p>Aviso: O áudio é bem incômodo e tem luzes piscando. Assistam por conta e risco.</p>
+                    </div>
+
+                    <div class="post-actions">
+                        <div class="action-item">💬 142 Comentários</div>
+                        <div class="action-item">↪ Compartilhar</div>
+                        <div class="action-item">⭐ Salvar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <div class="comments-header">
+                    Ordenado por: <strong>Melhores</strong>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar" style="background:#ff5722;">C</div>
+                    <div class="comment-content">
+                        <div class="comment-meta">
+                            <span class="comment-author">u/CiberFantasma</span> • <span>4 horas atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            Mds cara... eu cliquei achando que ia ser só aquele chiado de fita estragada e tomei um susto desgraçado. Que porra de apito é esse no fundo? Arrepiou tudo aqui.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 452 ▼</span> <span>Responder</span> <span>Compartilhar</span>
+                        </div>
+
+                        <div class="reply">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:#4caf50;">V</div>
+                                <div class="comment-content">
+                                    <div class="comment-meta">
+                                        <span class="comment-author">u/VoidWatcher</span> • <span>3 horas atrás</span>
+                                    </div>
+                                    <div class="comment-text">
+                                        Assustador é pouco. Eu uso fone com isolamento e juro que no momento de silêncio deu pra ouvir um código Morse bem baixo antes da voz ficar mais agressiva. Alguém consegue traduzir aquilo?
+                                    </div>
+                                    <div class="comment-actions">
+                                        <span>▲ 189 ▼</span> <span>Responder</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar" style="background:#9c27b0;">S</div>
+                    <div class="comment-content">
+                        <div class="comment-meta">
+                            <span class="comment-author">u/Sinal_Estatico</span> • <span>3 horas atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            OP, apaga isso. Sério. Aos 0:42 pausa o vídeo. Tem rostos nas falhas da imagem, duram menos de um segundo. Parece uma cabra com o rosto derretido ou sei lá. Isso não é uma simples invasão de sinal estilo Max Headroom. Parece material de seita ou maldição. Tô fora.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 310 ▼</span> <span>Responder</span>
+                        </div>
+
+                        <div class="reply">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:#333;">?</div>
+                                <div class="comment-content">
+                                    <div class="comment-meta">
+                                        <span class="comment-author" style="color:var(--text-muted)">[Usuário Deletado]</span> • <span>2 horas atrás</span>
+                                    </div>
+                                    <div class="comment-text deleted-comment">
+                                        [Este comentário foi removido pela moderação por violar as regras de segurança da comunidade]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-avatar" style="background:#2196f3;">A</div>
+                    <div class="comment-content">
+                        <div class="comment-meta">
+                            <span class="comment-author">u/ArquivistaBR</span> • <span>1 hora atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            Cara, eu trabalho com recuperação de mídia analógica há 15 anos. Nunca vi uma interferência corromper o padrão RGB dessa forma sem queimar o equipamento na torre de transmissão. Quem fez isso inseriu o sinal com uma potência absurdamente alta direto na fonte. O que me assusta é a mensagem. "A carne é a verdadeira evolução". Isso tem uma vibe muito podre.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 124 ▼</span> <span>Responder</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleVote(button, type) {
+            const container = button.parentElement;
+            const countSpan = container.querySelector('.vote-count');
+            const upBtn = container.querySelector('.upvote');
+            const downBtn = container.querySelector('.downvote');
+            
+            let count = parseFloat(countSpan.innerText);
+            let isK = countSpan.innerText.includes('k');
+            
+            // Lógica simples de UI
+            if (type === 1) { // Upvote
+                if (upBtn.classList.contains('upvoted')) {
+                    upBtn.classList.remove('upvoted');
+                    upBtn.style.color = '';
+                } else {
+                    upBtn.classList.add('upvoted');
+                    upBtn.style.color = 'var(--accent-upvote)';
+                    downBtn.classList.remove('downvoted');
+                    downBtn.style.color = '';
+                }
+            } else { // Downvote
+                if (downBtn.classList.contains('downvoted')) {
+                    downBtn.classList.remove('downvoted');
+                    downBtn.style.color = '';
+                } else {
+                    downBtn.classList.add('downvoted');
+                    downBtn.style.color = 'var(--accent-downvote)';
+                    upBtn.classList.remove('upvoted');
+                    upBtn.style.color = '';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
