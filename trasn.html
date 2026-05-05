@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transmissão Local - Canal 4</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --glitch-intensity: 2px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: 'VT323', monospace;
+            user-select: none;
+        }
+
+        #tv-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* TELA DE INÍCIO */
+        #start-screen {
+            position: absolute;
+            z-index: 10000;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        #start-btn {
+            padding: 15px 30px;
+            font-size: 24px;
+            font-family: 'VT323', monospace;
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        #start-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* PROGRAMAÇÃO NORMAL */
+        #normal-broadcast {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ccc;
+            z-index: 10;
+        }
+        
+        .color-bars {
+            width: 100%;
+            height: 80%;
+            display: flex;
+        }
+        
+        .bar { flex: 1; }
+        .bar:nth-child(1) { background: #fff; }
+        .bar:nth-child(2) { background: #ffff00; }
+        .bar:nth-child(3) { background: #00ffff; }
+        .bar:nth-child(4) { background: #00ff00; }
+        .bar:nth-child(5) { background: #ff00ff; }
+        .bar:nth-child(6) { background: #ff0000; }
+        .bar:nth-child(7) { background: #0000ff; }
+
+        .news-ticker {
+            width: 100%;
+            height: 20%;
+            background: #0000aa;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            font-size: 3vh;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding: 0 20px;
+        }
+
+        /* TRANSMISSÃO CORROMPIDA */
+        #horror-broadcast {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #050000;
+            z-index: 20;
+            display: none;
+            overflow: hidden;
+        }
+
+        /* ENTIDADE */
+        #entity-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 2s ease-in;
+        }
+
+        .entity {
+            width: 40vh;
+            height: 80vh;
+            background: radial-gradient(ellipse at center, #000000 40%, transparent 70%);
+            position: relative;
+            filter: blur(5px);
+            animation: breathe 4s infinite alternate;
+        }
+
+        .eyes {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .eye {
+            width: 15px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #fff;
+            animation: twitch 2s infinite;
+        }
+
+        /* EFEITOS CRT & GLITCH */
+        .crt-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 3px, rgba(0,0,0,0.3) 4px);
+            z-index: 101;
+            pointer-events: none;
+            animation: scanline 10s linear infinite;
+        }
+
+        .rgb-split {
+            animation: rgb-shift 0.1s infinite alternate;
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            z-index: 102;
+            pointer-events: none;
+        }
+
+        /* TEXTO DA DOUTRINA */
+        #subtitles {
+            position: absolute;
+            bottom: 10%;
+            width: 80%;
+            left: 10%;
+            text-align: center;
+            font-size: 4vh;
+            color: #fff;
+            text-shadow: 2px 0 0 red, -2px 0 0 cyan;
+            z-index: 90;
+            min-height: 10vh;
+        }
+
+        /* MENSAGENS SUBLIMINARES */
+        #subliminal-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 500;
+            display: none;
+            mix-blend-mode: exclusion;
+        }
+
+        #hidden-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10vh;
+            color: red;
+            font-weight: bold;
+            display: none;
+            z-index: 501;
+            white-space: nowrap;
+        }
+
+        /* KEYFRAMES */
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        @keyframes rgb-shift {
+            0% { text-shadow: var(--glitch-intensity) 0 0 red, calc(var(--glitch-intensity) * -1) 0 0 blue; transform: translate(1px, 1px); }
+            100% { text-shadow: calc(var(--glitch-intensity) * -1) 0 0 red, var(--glitch-intensity) 0 0 blue; transform: translate(-1px, -1px); }
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1); filter: blur(5px) drop-shadow(0 0 10px #000); }
+            100% { transform: scale(1.05); filter: blur(8px) drop-shadow(0 0 30px #2a0000); }
+        }
+
+        @keyframes twitch {
+            0%, 100% { transform: translateY(0) scaleY(1); opacity: 1; }
+            5% { transform: translateY(2px) scaleY(0.8); opacity: 0.8; }
+            10% { transform: translateY(-1px) scaleY(1.1); opacity: 1; }
+            50% { opacity: 0.1; }
+            52% { opacity: 1; }
+        }
+
+        .heavy-glitch {
+            animation: heavy-shake 0.2s infinite;
+            filter: contrast(200%) saturate(300%) hue-rotate(90deg);
+        }
+
+        @keyframes heavy-shake {
+            0% { transform: translate(2px, 1px) rotate(0deg); clip-path: inset(10% 0 80% 0); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); clip-path: inset(40% 0 10% 0); }
+            40% { transform: translate(1px, -1px) rotate(0deg); clip-path: inset(80% 0 5% 0); }
+            60% { transform: translate(-1px, 2px) rotate(-1deg); clip-path: inset(20% 0 50% 0); }
+            80% { transform: translate(-2px, -1px) rotate(0deg); clip-path: inset(0% 0 90% 0); }
+            100% { transform: translate(1px, -2px) rotate(0deg); clip-path: inset(60% 0 20% 0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="tv-container">
+        
+        <!-- Tela Inicial para contornar bloqueio de áudio do navegador -->
+        <div id="start-screen">
+            <h2>AVISO DE SINAL</h2>
+            <p>Este arquivo contém frequências instáveis.</p>
+            <button id="start-btn">Sintonizar Canal</button>
+        </div>
+
+        <!-- Programação Normal -->
+        <div id="normal-broadcast">
+            <div class="color-bars">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <div class="news-ticker">
+                <marquee scrollamount="10">BOLETIM INFORMATIVO: Tarde tranquila na capital. Previsão do tempo indica chuvas isoladas para o fim de semana. Fique ligado na nossa programação. A seguir: A Novela das Oito.</marquee>
+            </div>
+        </div>
+
+        <!-- Transmissão Corrompida (A Entidade) -->
+        <div id="horror-broadcast">
+            <div class="crt-overlay"></div>
+            <div class="scanlines"></div>
+            <div class="vignette"></div>
+
+            <div id="entity-container">
+                <div class="entity">
+                    <!-- PLACEHOLDER 1: Se você quiser colocar uma imagem real da entidade, 
+                         substitua o display:none por block e coloque a URL. -->
+                    <img src="IMG_20260504_201842_1.jpg" style="display:none; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; mix-blend-mode: multiply;">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subtitles" class="rgb-split"></div>
+
+            <!-- Camadas para as mensagens subliminares -->
+            <div id="subliminal-layer"></div>
+            <div id="hidden-text"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÕES DE IMAGENS SUBLIMINARES ---
+        // PLACEHOLDER 2: Coloque aqui os links (URLs ou caminhos locais) das imagens distorcidas
+        // que você quer que pisquem na tela por 1 frame.
+        const subliminalImages = [
+            "Screenshot_2026-05-04-19-57-39-869_app.revanced.android.youtube.jpg",
+            "Screenshot_2026-05-04-19-57-39-869_app.revanced.android.youtube.jpg",
+            "Screenshot_2026-05-04-19-57-39-869_app.revanced.android.youtube.jpg"
+        ];
+
+        // Se você não fornecer imagens válidas, o sistema usará distorções de cor CSS puras
+        const subliminalTexts = [
+            "ELES ESTÃO MORTOS",
+            "FALSOS DEUS",
+            "A CARNE CHORA",
+            "NÃO HÁ ALMA",
+            "DESPERTE",
+            "GÊNESIS É A MATÉRIA",
+            "SANGRE POR ELES"
+        ];
+
+        // --- SCRIPT DA DOUTRINA DA ENTIDADE ---
+        const scriptLines = [
+            { time: 1000, text: "Não ajustem a sintonia." },
+            { time: 5000, text: "Acreditam que o espírito os salvará?" },
+            { time: 9000, text: "Mentiras. Ilusões costuradas com ar." },
+            { time: 13000, text: "O Éden... o Jardim... nunca foi um lugar." },
+            { time: 17000, text: "O Gênesis é a carne. A verdadeira evolução... pulsa e sangra." },
+            { time: 23000, text: "Qualquer outra crença é uma afronta. Uma doença." },
+            { time: 28000, text: "Vocês rezam para o vazio... para deuses mortos." },
+            { time: 33000, text: "Pecadores imundos. Renegam o próprio nervo. Renegam o osso." },
+            { time: 39000, text: "A ressurreição que o jardim proporciona... brota da podridão." },
+            { time: 45000, text: "Aceitem a matéria. A carne é a única salvação." },
+            { time: 51000, text: "Transcendam... ou sejam devorados pela própria alma apodrecida." },
+            { time: 57000, text: "A vONtaDE d4 c4RN3..." } // Início do colapso
+        ];
+
+        // --- VARIÁVEIS GERAIS ---
+        let audioCtx;
+        let isPlaying = false;
+        let glitchLevel = 0; // Vai de 0 a 100 ao longo do vídeo
+        const broadcastTime = 65000; // Duração total em ms (65 segundos)
+
+        // Elementos do DOM
+        const startScreen = document.getElementById('start-screen');
+        const startBtn = document.getElementById('start-btn');
+        const normalTv = document.getElementById('normal-broadcast');
+        const horrorTv = document.getElementById('horror-broadcast');
+        const subtitles = document.getElementById('subtitles');
+        const entityContainer = document.getElementById('entity-container');
+        const subliminalLayer = document.getElementById('subliminal-layer');
+        const hiddenText = document.getElementById('hidden-text');
+        
+        // Função para corromper texto (Zalgo-lite)
+        function corruptText(text, intensity) {
+            if (intensity === 0) return text;
+            const chars = '!<>-_\\/[]{}—=+*^?#_@';
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                if (Math.random() < (intensity / 100)) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                } else {
+                    result += text[i];
+                }
+            }
+            return result;
+        }
+
+        // --- SISTEMA DE ÁUDIO WEB API ---
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // 1. Ruído Constante (Interferência)
+            const bufferSize = 2 * audioCtx.sampleRate;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = noiseBuffer;
+            noiseSource.loop = true;
+
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.value = 800; // Deixa o ruído abafado
+            
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = 0.1; // Volume inicial baixo
+
+            noiseSource.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseSource.start();
+
+            // 2. Música Angelical Distorcida
+            const chord = [261.63, 311.13, 392.00]; // Dó Menor
+            const synthGain = audioCtx.createGain();
+            synthGain.gain.value = 0.2;
+            
+            const distortion = audioCtx.createWaveShaper();
+            distortion.curve = makeDistortionCurve(400); // Curva pesada
+
+            const synthFilter = audioCtx.createBiquadFilter();
+            synthFilter.type = 'bandpass';
+            synthFilter.frequency.value = 1000;
+
+            chord.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                osc.type = 'sine'; // Tonalidade pura, quase como coro
+                // Desafinação constante
+                setInterval(() => {
+                    osc.frequency.value = freq + (Math.random() * glitchLevel - (glitchLevel/2));
+                }, 500);
+                osc.connect(synthFilter);
+                osc.start();
+            });
+
+            synthFilter.connect(distortion);
+            distortion.connect(synthGain);
+            synthGain.connect(audioCtx.destination);
+
+            // 3. Código Morse escondido (Bem baixo)
+            const morseOsc = audioCtx.createOscillator();
+            morseOsc.type = 'square';
+            morseOsc.frequency.value = 600;
+            const morseGain = audioCtx.createGain();
+            morseGain.gain.value = 0;
+            morseOsc.connect(morseGain);
+            morseGain.connect(audioCtx.destination);
+            morseOsc.start();
+
+            return { noiseGain, synthGain, synthFilter, morseGain };
+        }
+
+        function makeDistortionCurve(amount) {
+            let k = typeof amount === 'number' ? amount : 50,
+                n_samples = 44100,
+                curve = new Float32Array(n_samples),
+                deg = Math.PI / 180,
+                i = 0,
+                x;
+            for ( ; i < n_samples; ++i ) {
+                x = i * 2 / n_samples - 1;
+                curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+            }
+            return curve;
+        }
+
+        // --- SISTEMA DE VOZ DA ENTIDADE ---
+        function speak(text) {
+            if (!'speechSynthesis' in window) return;
+            window.speechSynthesis.cancel(); // Limpa fila
+
+            const utterance1 = new SpeechSynthesisUtterance(text);
+            const utterance2 = new SpeechSynthesisUtterance(text); // Voz dessincronizada
+            
+            utterance1.lang = 'pt-BR';
+            utterance2.lang = 'pt-BR';
+            
+            // Distorce de acordo com o nível de glitch
+            utterance1.pitch = Math.max(0.1, 0.5 - (glitchLevel / 200)); // Fica cada vez mais grave
+            utterance1.rate = Math.max(0.5, 0.8 - (glitchLevel / 300));
+            utterance1.volume = 1;
+
+            utterance2.pitch = Math.min(2, 1.5 + (glitchLevel / 100)); // Voz sintética alta
+            utterance2.rate = Math.min(1.5, 1.1 + (glitchLevel / 200));
+            utterance2.volume = 0.4;
+
+            window.speechSynthesis.speak(utterance1);
+            setTimeout(() => {
+                if(isPlaying) window.speechSynthesis.speak(utterance2);
+            }, 100 + (Math.random() * 200)); // Delay sutil
+        }
+
+        // --- LÓGICA DE INTERRUPÇÃO E LINHA DO TEMPO ---
+        startBtn.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            // Simula programação normal por 3 segundos antes do corte
+            setTimeout(startHijack, 3000);
+        });
+
+        function startHijack() {
+            if(isPlaying) return;
+            isPlaying = true;
+
+            // Corta TV normal
+            normalTv.style.display = 'none';
+            horrorTv.style.display = 'block';
+            
+            const audioSystem = initAudio();
+            
+            // Início da transmissão (Entidade aparece)
+            setTimeout(() => {
+                entityContainer.style.opacity = 1;
+            }, 1000);
+
+            // Gerenciador de Texto e Voz
+            let lastGlitchLevel = 0;
+            scriptLines.forEach(line => {
+                setTimeout(() => {
+                    if(!isPlaying) return;
+                    subtitles.innerText = corruptText(line.text, glitchLevel);
+                    speak(line.text);
+                }, line.time);
+            });
+
+            // Loop Principal (Evolução da Instabilidade)
+            const masterInterval = setInterval(() => {
+                if(!isPlaying) return;
+                
+                // Aumenta glitch progressivamente até o máximo
+                glitchLevel = Math.min(100, glitchLevel + 1.5);
+                document.documentElement.style.setProperty('--glitch-intensity', `${glitchLevel / 5}px`);
+                
+                // Áudio aumenta agressividade
+                audioSystem.noiseGain.gain.value = 0.1 + (glitchLevel / 200);
+                audioSystem.synthFilter.frequency.value = 1000 + (glitchLevel * 20); // Fica mais agudo/estridente
+                
+                // Morse code escondido no background (toca aleatoriamente rápido)
+                if (Math.random() > 0.8) {
+                    audioSystem.morseGain.gain.value = 0.05;
+                    setTimeout(() => audioSystem.morseGain.gain.value = 0, 50);
+                }
+
+                // Corrupção de imagem pesada no final
+                if (glitchLevel > 70) {
+                    horrorTv.classList.add('heavy-glitch');
+                } else if (Math.random() > 0.9) {
+                    // Pulo de frame rápido
+                    horrorTv.style.transform = `translate(${Math.random()*10 - 5}px, ${Math.random()*10 - 5}px)`;
+                    setTimeout(() => horrorTv.style.transform = 'none', 50);
+                }
+
+            }, 1000);
+
+            // Loop de Subliminares (Aparecem por 1 frame - ~30ms)
+            const subliminalInterval = setInterval(() => {
+                if(!isPlaying || glitchLevel < 20) return; // Só começa depois de um tempo
+                
+                // 5% de chance a cada 100ms
+                if (Math.random() < (0.05 + (glitchLevel/1000))) {
+                    
+                    if (Math.random() > 0.5 && subliminalImages[0] !== "URL_DA_IMAGEM_DE_SANTO_DISTORCIDO_1") {
+                        // Mostra Imagem
+                        const img = subliminalImages[Math.floor(Math.random() * subliminalImages.length)];
+                        subliminalLayer.style.backgroundImage = `url(${img})`;
+                        subliminalLayer.style.display = 'block';
+                    } else {
+                        // Mostra Texto Corrompido
+                        hiddenText.innerText = corruptText(subliminalTexts[Math.floor(Math.random() * subliminalTexts.length)], 20);
+                        hiddenText.style.display = 'block';
+                    }
+
+                    // Remove quase instantaneamente (efeito 1 frame)
+                    setTimeout(() => {
+                        subliminalLayer.style.display = 'none';
+                        hiddenText.style.display = 'none';
+                    }, 30 + Math.random() * 20); // 30 a 50ms
+                }
+            }, 100);
+
+            // CORTAR ABRUPTAMENTE E VOLTAR AO NORMAL
+            setTimeout(() => {
+                isPlaying = false;
+                clearInterval(masterInterval);
+                clearInterval(subliminalInterval);
+                
+                // Para áudios
+                audioCtx.close();
+                window.speechSynthesis.cancel();
+                
+                // Reseta visuais
+                horrorTv.classList.remove('heavy-glitch');
+                horrorTv.style.display = 'none';
+                normalTv.style.display = 'flex';
+                
+                // Opcional: Recarregar a página ou apenas deixar a programação normal
+                document.querySelector('.news-ticker marquee').innerText = "BOLETIM INFORMATIVO: Retomamos nossa programação normal. Pedimos desculpas pela falha de sinal técnico. A seguir: A Novela das Oito.";
+                
+            }, broadcastTime);
+        }
+    </script>
+</body>
+</html>
