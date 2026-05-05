@@ -28,7 +28,6 @@
             color: var(--text-main);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.5;
-            overflow-x: hidden;
         }
 
         /* HEADER */
@@ -49,7 +48,6 @@
             font-weight: 900;
             color: white;
             letter-spacing: -1px;
-            cursor: pointer;
         }
         
         .logo span {
@@ -68,7 +66,7 @@
 
         /* MAIN LAYOUT */
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 20px auto;
             display: flex;
             gap: 24px;
@@ -76,56 +74,8 @@
         }
 
         .content {
-            flex: 1;
-            max-width: 640px;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 312px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        @media (max-width: 900px) {
-            .sidebar { display: none; }
-            .container { justify-content: center; }
-        }
-
-        .sidebar-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 12px;
-        }
-
-        .sidebar-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
-        .exit-button {
-            display: block;
-            width: 100%;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: opacity 0.2s;
-            margin-top: 10px;
-        }
-
-        .exit-button:hover {
-            opacity: 0.8;
+            flex-grow: 1;
+            max-width: 100%;
         }
 
         /* POST PRINCIPAL */
@@ -266,6 +216,15 @@
             position: relative;
         }
 
+        .comment-thread-line {
+            position: absolute;
+            top: 35px;
+            bottom: 0;
+            left: 15px;
+            width: 2px;
+            background-color: var(--border);
+        }
+
         .comment-avatar {
             width: 30px;
             height: 30px;
@@ -308,6 +267,12 @@
             font-weight: bold;
         }
 
+        .comment-actions span {
+            cursor: pointer;
+        }
+        .comment-actions span:hover { color: var(--text-main); }
+
+        /* NESTED COMMENTS (Respostas) */
         .reply {
             margin-top: 16px;
             margin-left: 20px;
@@ -328,12 +293,11 @@
 <body>
 
     <header>
-        <div class="logo" onclick="window.location.reload()">Thread<span>it</span></div>
+        <div class="logo">Thread<span>it</span></div>
         <input type="text" class="search-bar" placeholder="Buscar no Threadit...">
     </header>
 
     <div class="container">
-        <!-- COLUNA PRINCIPAL -->
         <div class="content">
             
             <div class="post">
@@ -352,17 +316,18 @@
                     <h1 class="post-title">Estou digitalizando fitas VHS antigas de emissoras locais e encontrei algo que não deveria estar lá. Alguém lembra disso?</h1>
                     
                     <div class="post-body">
-                        <p>E aí, pessoal. Há alguns meses comecei um projeto pessoal de comprar caixas de fitas VHS antigas em feiras de garagem.</p>
-                        <p>Ontem à noite, eu estava convertendo uma fita de 1995 que tinha uma gravação de um canal local (Canal 4). Parecia ser só um programa comum, mas do nada o sinal falha.</p>
-                        <p>O áudio... tem uma voz estranha. A sensação que me deu assistindo isso sozinho de madrugada foi sufocante.</p>
+                        <p>E aí, pessoal. Há alguns meses comecei um projeto pessoal de comprar caixas de fitas VHS antigas em feiras de garagem para digitalizar comerciais antigos, jornais e mídias perdidas.</p>
+                        <p>Ontem à noite, eu estava convertendo uma fita de 1995 que tinha uma gravação de um canal local (Canal 4). Parecia ser só um programa comum, mas do nada o sinal falha. No começo achei que a fita tinha mofado ou estragado, mas o que entrou no lugar da transmissão não é erro técnico.</p>
+                        <p>O áudio... tem uma voz estranha. E o texto que aparece na tela parece algum tipo de doutrina distorcida falando sobre "carne" e "Gênesis". A sensação que me deu assistindo isso sozinho de madrugada foi sufocante, como se o vídeo estivesse olhando de volta pra mim.</p>
+                        <p>Eu hospedei o trecho cortado. Por favor, alguém da região lembra de ter visto um sequestro de sinal parecido com isso na época?</p>
                         
                         <div class="creepy-link-box">
-                            <a href="trasn.html" class="creepy-link">
+                            <a href="trasn.html" target="_blank" class="creepy-link">
                                 [LINK DA GRAVAÇÃO] acessar_arquivo_vhs_canal4.html
                             </a>
                         </div>
                         
-                        <p>Aviso: O áudio é bem incômodo. Assistam por conta e risco.</p>
+                        <p>Aviso: O áudio é bem incômodo e tem luzes piscando. Assistam por conta e risco.</p>
                     </div>
 
                     <div class="post-actions">
@@ -374,90 +339,121 @@
             </div>
 
             <div class="comments-section">
-                <div class="comments-header">Ordenado por: <strong>Melhores</strong></div>
+                <div class="comments-header">
+                    Ordenado por: <strong>Melhores</strong>
+                </div>
 
-                <!-- Comentário 1 -->
                 <div class="comment">
                     <div class="comment-avatar" style="background:#ff5722;">C</div>
                     <div class="comment-content">
-                        <div class="comment-meta"><span class="comment-author">u/CiberFantasma</span> • 4h</div>
-                        <div class="comment-text">Mds cara... Que porra de apito é esse no fundo? Arrepiou tudo aqui.</div>
-                        <div class="comment-actions"><span>▲ 452 ▼</span> <span>Responder</span></div>
+                        <div class="comment-meta">
+                            <span class="comment-author">u/CiberFantasma</span> • <span>4 horas atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            Mds cara... eu cliquei achando que ia ser só aquele chiado de fita estragada e tomei um susto desgraçado. Que porra de apito é esse no fundo? Arrepiou tudo aqui.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 452 ▼</span> <span>Responder</span> <span>Compartilhar</span>
+                        </div>
+
+                        <div class="reply">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:#4caf50;">V</div>
+                                <div class="comment-content">
+                                    <div class="comment-meta">
+                                        <span class="comment-author">u/VoidWatcher</span> • <span>3 horas atrás</span>
+                                    </div>
+                                    <div class="comment-text">
+                                        Assustador é pouco. Eu uso fone com isolamento e juro que no momento de silêncio deu pra ouvir um código Morse bem baixo antes da voz ficar mais agressiva. Alguém consegue traduzir aquilo?
+                                    </div>
+                                    <div class="comment-actions">
+                                        <span>▲ 189 ▼</span> <span>Responder</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Comentário 2 -->
                 <div class="comment">
                     <div class="comment-avatar" style="background:#9c27b0;">S</div>
                     <div class="comment-content">
-                        <div class="comment-meta"><span class="comment-author">u/Sinal_Estatico</span> • 3h</div>
-                        <div class="comment-text">OP, apaga isso. Tem rostos nas falhas da imagem. Parece uma cabra com o rosto derretido. Tô fora.</div>
-                        <div class="comment-actions"><span>▲ 310 ▼</span> <span>Responder</span></div>
+                        <div class="comment-meta">
+                            <span class="comment-author">u/Sinal_Estatico</span> • <span>3 horas atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            OP, apaga isso. Sério. Aos 0:42 pausa o vídeo. Tem rostos nas falhas da imagem, duram menos de um segundo. Parece uma cabra com o rosto derretido ou sei lá. Isso não é uma simples invasão de sinal estilo Max Headroom. Parece material de seita ou maldição. Tô fora.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 310 ▼</span> <span>Responder</span>
+                        </div>
+
+                        <div class="reply">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:#333;">?</div>
+                                <div class="comment-content">
+                                    <div class="comment-meta">
+                                        <span class="comment-author" style="color:var(--text-muted)">[Usuário Deletado]</span> • <span>2 horas atrás</span>
+                                    </div>
+                                    <div class="comment-text deleted-comment">
+                                        [Este comentário foi removido pela moderação por violar as regras de segurança da comunidade]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- BARRA LATERAL (NOVO: BOTÃO DE SAIR) -->
-        <div class="sidebar">
-            <div class="sidebar-card">
-                <div class="sidebar-title">Sobre a Comunidade</div>
-                <p style="font-size: 14px; margin-bottom: 12px;">Espaço dedicado a mistérios, sequestros de sinal e achados bizarros da web e mídias analógicas.</p>
-                <div style="border-top: 1px solid var(--border); padding-top: 12px;">
-                    <span style="font-size: 12px; color: var(--text-muted);">Navegação do Post:</span>
-                    <!-- BOTÃO PARA SAIR/VOLTAR -->
-                    <button class="exit-button" onclick="exitContent()">FECHAR TRANSMISSÃO</button>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px; text-align: center;">Clique para retornar ao feed principal caso tenha clicado no link.</p>
+                <div class="comment">
+                    <div class="comment-avatar" style="background:#2196f3;">A</div>
+                    <div class="comment-content">
+                        <div class="comment-meta">
+                            <span class="comment-author">u/ArquivistaBR</span> • <span>1 hora atrás</span>
+                        </div>
+                        <div class="comment-text">
+                            Cara, eu trabalho com recuperação de mídia analógica há 15 anos. Nunca vi uma interferência corromper o padrão RGB dessa forma sem queimar o equipamento na torre de transmissão. Quem fez isso inseriu o sinal com uma potência absurdamente alta direto na fonte. O que me assusta é a mensagem. "A carne é a verdadeira evolução". Isso tem uma vibe muito podre.
+                        </div>
+                        <div class="comment-actions">
+                            <span>▲ 124 ▼</span> <span>Responder</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="sidebar-card">
-                <div class="sidebar-title">Regras</div>
-                <ol style="font-size: 12px; padding-left: 15px; color: var(--text-muted);">
-                    <li>Não poste links diretos da Deep Web.</li>
-                    <li>Sempre use aviso de Gore/Jumpscare.</li>
-                    <li>Mantenha o respeito.</li>
-                </ol>
+
             </div>
         </div>
     </div>
 
     <script>
-        // Função para simular o "Sair" do conteúdo bizarro
-        function exitContent() {
-            // Se o usuário abriu em outra aba, essa aba apenas recarrega para simular "limpeza"
-            // Se ele estiver navegando na mesma aba, ele volta para o topo
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Pequeno feedback visual
-            const btn = document.querySelector('.exit-button');
-            btn.innerText = "RETORNANDO AO FEED...";
-            btn.style.backgroundColor = "#555";
-            
-            setTimeout(() => {
-                btn.innerText = "FECHAR TRANSMISSÃO";
-                btn.style.backgroundColor = "var(--accent)";
-                // Simula que ele "limpou" a sessão ao voltar pro fórum
-                console.log("Conexão com trasn.html encerrada com segurança.");
-            }, 1000);
-        }
-
         function toggleVote(button, type) {
             const container = button.parentElement;
             const countSpan = container.querySelector('.vote-count');
             const upBtn = container.querySelector('.upvote');
             const downBtn = container.querySelector('.downvote');
             
-            if (type === 1) {
-                upBtn.classList.toggle('upvoted');
-                upBtn.style.color = upBtn.classList.contains('upvoted') ? 'var(--accent-upvote)' : '';
-                downBtn.classList.remove('downvoted');
-                downBtn.style.color = '';
-            } else {
-                downBtn.classList.toggle('downvoted');
-                downBtn.style.color = downBtn.classList.contains('downvoted') ? 'var(--accent-downvote)' : '';
-                upBtn.classList.remove('upvoted');
-                upBtn.style.color = '';
+            let count = parseFloat(countSpan.innerText);
+            let isK = countSpan.innerText.includes('k');
+            
+            // Lógica simples de UI
+            if (type === 1) { // Upvote
+                if (upBtn.classList.contains('upvoted')) {
+                    upBtn.classList.remove('upvoted');
+                    upBtn.style.color = '';
+                } else {
+                    upBtn.classList.add('upvoted');
+                    upBtn.style.color = 'var(--accent-upvote)';
+                    downBtn.classList.remove('downvoted');
+                    downBtn.style.color = '';
+                }
+            } else { // Downvote
+                if (downBtn.classList.contains('downvoted')) {
+                    downBtn.classList.remove('downvoted');
+                    downBtn.style.color = '';
+                } else {
+                    downBtn.classList.add('downvoted');
+                    downBtn.style.color = 'var(--accent-downvote)';
+                    upBtn.classList.remove('upvoted');
+                    upBtn.style.color = '';
+                }
             }
         }
     </script>
