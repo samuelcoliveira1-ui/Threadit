@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -48,6 +49,7 @@
             font-weight: 900;
             color: white;
             letter-spacing: -1px;
+            cursor: pointer;
         }
         
         .logo span {
@@ -288,142 +290,317 @@
             border-radius: 4px;
         }
 
+        /* MENSAGEM DE ERRO PESQUISA */
+        .search-error {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Thread<span>it</span></div>
-        <input type="text" class="search-bar" placeholder="Buscar no Threadit...">
+        <div class="logo" onclick="resetView()">Thread<span>it</span></div>
+        <input type="text" class="search-bar" id="searchInput" placeholder="Buscar no Threadit... (Pressione Enter)">
     </header>
 
     <div class="container">
         <div class="content">
             
-            <div class="post">
-                <div class="vote-column">
-                    <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
-                    <span class="vote-count">1.4k</span>
-                    <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
-                </div>
-                <div class="post-content">
-                    <div class="post-meta">
-                        <a href="#" class="community-name">c/CoisasEstranhasDaInternet</a>
-                        <span>•</span>
-                        <span>Postado por u/Arquivo_Morto89 há 5 horas</span>
-                    </div>
-                    
-                    <h1 class="post-title">Estou digitalizando fitas VHS antigas de emissoras locais e encontrei algo que não deveria estar lá. Alguém lembra disso?</h1>
-                    
-                    <div class="post-body">
-                        <p>E aí, pessoal. Há alguns meses comecei um projeto pessoal de comprar caixas de fitas VHS antigas em feiras de garagem para digitalizar comerciais antigos, jornais e mídias perdidas.</p>
-                        <p>Ontem à noite, eu estava convertendo uma fita de 1995 que tinha uma gravação de um canal local (Canal 4). Parecia ser só um programa comum, mas do nada o sinal falha. No começo achei que a fita tinha mofado ou estragado, mas o que entrou no lugar da transmissão não é erro técnico.</p>
-                        <p>O áudio... tem uma voz estranha. E o texto que aparece na tela parece algum tipo de doutrina distorcida falando sobre "carne" e "Gênesis". A sensação que me deu assistindo isso sozinho de madrugada foi sufocante, como se o vídeo estivesse olhando de volta pra mim.</p>
-                        <p>Eu hospedei o trecho cortado. Por favor, alguém da região lembra de ter visto um sequestro de sinal parecido com isso na época?</p>
-                        
-                        <div class="creepy-link-box">
-                            <a href="trasn.html" target="_blank" class="creepy-link">
-                                [LINK DA GRAVAÇÃO] acessar_arquivo_vhs_canal4.html
-                            </a>
-                        </div>
-                        
-                        <p>Aviso: O áudio é bem incômodo e tem luzes piscando. Assistam por conta e risco.</p>
-                    </div>
-
-                    <div class="post-actions">
-                        <div class="action-item">💬 142 Comentários</div>
-                        <div class="action-item">↪ Compartilhar</div>
-                        <div class="action-item">⭐ Salvar</div>
-                    </div>
-                </div>
+            <div id="search-error" class="search-error">
+                Nenhum resultado encontrado para a sua pesquisa. Tente outras palavras.
             </div>
 
-            <div class="comments-section">
-                <div class="comments-header">
-                    Ordenado por: <strong>Melhores</strong>
+            <!-- POST ORIGINAL -->
+            <div id="post-original" class="thread-view">
+                <div class="post">
+                    <div class="vote-column">
+                        <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
+                        <span class="vote-count">1.4k</span>
+                        <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <a href="#" class="community-name">c/CoisasEstranhasDaInternet</a>
+                            <span>•</span>
+                            <span>Postado por u/Arquivo_Morto89 há 5 horas</span>
+                        </div>
+                        
+                        <h1 class="post-title">Estou digitalizando fitas VHS antigas de emissoras locais e encontrei algo que não deveria estar lá. Alguém lembra disso?</h1>
+                        
+                        <div class="post-body">
+                            <p>E aí, pessoal. Há alguns meses comecei um projeto pessoal de comprar caixas de fitas VHS antigas em feiras de garagem para digitalizar comerciais antigos, jornais e mídias perdidas.</p>
+                            <p>Ontem à noite, eu estava convertendo uma fita de 1995 que tinha uma gravação de um canal local (Canal 4). Parecia ser só um programa comum, mas do nada o sinal falha. No começo achei que a fita tinha mofado ou estragado, mas o que entrou no lugar da transmissão não é erro técnico.</p>
+                            <p>O áudio... tem uma voz estranha. E o texto que aparece na tela parece algum tipo de doutrina distorcida falando sobre "carne" e "Gênesis". A sensação que me deu assistindo isso sozinho de madrugada foi sufocante, como se o vídeo estivesse olhando de volta pra mim.</p>
+                            <p>Eu hospedei o trecho cortado. Por favor, alguém da região lembra de ter visto um sequestro de sinal parecido com isso na época?</p>
+                            
+                            <div class="creepy-link-box">
+                                <a href="trasn.html" target="_blank" class="creepy-link">
+                                    [LINK DA GRAVAÇÃO] acessar_arquivo_vhs_canal4.html
+                                </a>
+                            </div>
+                            
+                            <p>Aviso: O áudio é bem incômodo e tem luzes piscando. Assistam por conta e risco.</p>
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-item">💬 142 Comentários</div>
+                            <div class="action-item">↪ Compartilhar</div>
+                            <div class="action-item">⭐ Salvar</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="comment">
-                    <div class="comment-avatar" style="background:#ff5722;">C</div>
-                    <div class="comment-content">
-                        <div class="comment-meta">
-                            <span class="comment-author">u/CiberFantasma</span> • <span>4 horas atrás</span>
-                        </div>
-                        <div class="comment-text">
-                            Mds cara... eu cliquei achando que ia ser só aquele chiado de fita estragada e tomei um susto desgraçado. Que porra de apito é esse no fundo? Arrepiou tudo aqui.
-                        </div>
-                        <div class="comment-actions">
-                            <span>▲ 452 ▼</span> <span>Responder</span> <span>Compartilhar</span>
-                        </div>
+                <div class="comments-section">
+                    <div class="comments-header">
+                        Ordenado por: <strong>Melhores</strong>
+                    </div>
 
-                        <div class="reply">
-                            <div class="comment">
-                                <div class="comment-avatar" style="background:#4caf50;">V</div>
-                                <div class="comment-content">
-                                    <div class="comment-meta">
-                                        <span class="comment-author">u/VoidWatcher</span> • <span>3 horas atrás</span>
-                                    </div>
-                                    <div class="comment-text">
-                                        Assustador é pouco. Eu uso fone com isolamento e juro que no momento de silêncio deu pra ouvir um código Morse bem baixo antes da voz ficar mais agressiva. Alguém consegue traduzir aquilo?
-                                    </div>
-                                    <div class="comment-actions">
-                                        <span>▲ 189 ▼</span> <span>Responder</span>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#ff5722;">C</div>
+                        <div class="comment-content">
+                            <div class="comment-meta">
+                                <span class="comment-author">u/CiberFantasma</span> • <span>4 horas atrás</span>
+                            </div>
+                            <div class="comment-text">
+                                Mds cara... eu cliquei achando que ia ser só aquele chiado de fita estragada e tomei um susto desgraçado. Que porra de apito é esse no fundo? Arrepiou tudo aqui.
+                            </div>
+                            <div class="comment-actions">
+                                <span>▲ 452 ▼</span> <span>Responder</span> <span>Compartilhar</span>
+                            </div>
+
+                            <div class="reply">
+                                <div class="comment">
+                                    <div class="comment-avatar" style="background:#4caf50;">V</div>
+                                    <div class="comment-content">
+                                        <div class="comment-meta">
+                                            <span class="comment-author">u/VoidWatcher</span> • <span>3 horas atrás</span>
+                                        </div>
+                                        <div class="comment-text">
+                                            Assustador é pouco. Eu uso fone com isolamento e juro que no momento de silêncio deu pra ouvir um código Morse bem baixo antes da voz ficar mais agressiva. Alguém consegue traduzir aquilo?
+                                        </div>
+                                        <div class="comment-actions">
+                                            <span>▲ 189 ▼</span> <span>Responder</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="comment">
-                    <div class="comment-avatar" style="background:#9c27b0;">S</div>
-                    <div class="comment-content">
-                        <div class="comment-meta">
-                            <span class="comment-author">u/Sinal_Estatico</span> • <span>3 horas atrás</span>
-                        </div>
-                        <div class="comment-text">
-                            OP, apaga isso. Sério. Aos 0:42 pausa o vídeo. Tem rostos nas falhas da imagem, duram menos de um segundo. Parece uma cabra com o rosto derretido ou sei lá. Isso não é uma simples invasão de sinal estilo Max Headroom. Parece material de seita ou maldição. Tô fora.
-                        </div>
-                        <div class="comment-actions">
-                            <span>▲ 310 ▼</span> <span>Responder</span>
-                        </div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#9c27b0;">S</div>
+                        <div class="comment-content">
+                            <div class="comment-meta">
+                                <span class="comment-author">u/Sinal_Estatico</span> • <span>3 horas atrás</span>
+                            </div>
+                            <div class="comment-text">
+                                OP, apaga isso. Sério. Aos 0:42 pausa o vídeo. Tem rostos nas falhas da imagem, duram menos de um segundo. Parece uma cabra com o rosto derretido ou sei lá. Isso não é uma simples invasão de sinal estilo Max Headroom. Parece material de seita ou maldição. Tô fora.
+                            </div>
+                            <div class="comment-actions">
+                                <span>▲ 310 ▼</span> <span>Responder</span>
+                            </div>
 
-                        <div class="reply">
-                            <div class="comment">
-                                <div class="comment-avatar" style="background:#333;">?</div>
-                                <div class="comment-content">
-                                    <div class="comment-meta">
-                                        <span class="comment-author" style="color:var(--text-muted)">[Usuário Deletado]</span> • <span>2 horas atrás</span>
-                                    </div>
-                                    <div class="comment-text deleted-comment">
-                                        [Este comentário foi removido pela moderação por violar as regras de segurança da comunidade]
+                            <div class="reply">
+                                <div class="comment">
+                                    <div class="comment-avatar" style="background:#333;">?</div>
+                                    <div class="comment-content">
+                                        <div class="comment-meta">
+                                            <span class="comment-author" style="color:var(--text-muted)">[Usuário Deletado]</span> • <span>2 horas atrás</span>
+                                        </div>
+                                        <div class="comment-text deleted-comment">
+                                            [Este comentário foi removido pela moderação por violar as regras de segurança da comunidade]
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="comment">
-                    <div class="comment-avatar" style="background:#2196f3;">A</div>
-                    <div class="comment-content">
-                        <div class="comment-meta">
-                            <span class="comment-author">u/ArquivistaBR</span> • <span>1 hora atrás</span>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#2196f3;">A</div>
+                        <div class="comment-content">
+                            <div class="comment-meta">
+                                <span class="comment-author">u/ArquivistaBR</span> • <span>1 hora atrás</span>
+                            </div>
+                            <div class="comment-text">
+                                Cara, eu trabalho com recuperação de mídia analógica há 15 anos. Nunca vi uma interferência corromper o padrão RGB dessa forma sem queimar o equipamento na torre de transmissão. Quem fez isso inseriu o sinal com uma potência absurdamente alta direto na fonte. O que me assusta é a mensagem. "A carne é a verdadeira evolução". Isso tem uma vibe muito podre.
+                            </div>
+                            <div class="comment-actions">
+                                <span>▲ 124 ▼</span> <span>Responder</span>
+                            </div>
                         </div>
-                        <div class="comment-text">
-                            Cara, eu trabalho com recuperação de mídia analógica há 15 anos. Nunca vi uma interferência corromper o padrão RGB dessa forma sem queimar o equipamento na torre de transmissão. Quem fez isso inseriu o sinal com uma potência absurdamente alta direto na fonte. O que me assusta é a mensagem. "A carne é a verdadeira evolução". Isso tem uma vibe muito podre.
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTADO 1: LÁZARO -->
+            <div id="post-lazaro" class="thread-view" style="display: none;">
+                <div class="post">
+                    <div class="vote-column">
+                        <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
+                        <span class="vote-count">3.2k</span>
+                        <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <a href="#" class="community-name">c/TeoriasDaConspiracao</a>
+                            <span>•</span>
+                            <span>Postado por u/OlhoQueTudoVe há 2 dias</span>
                         </div>
-                        <div class="comment-actions">
-                            <span>▲ 124 ▼</span> <span>Responder</span>
+                        
+                        <h1 class="post-title">O caso bizarro do bilionário Lázaro. Alguém mais percebeu o quão estranho ele é?</h1>
+                        
+                        <div class="post-body">
+                            <p>Eu venho acompanhando a trajetória desse cara há algum tempo e nada faz sentido na vida dele. Ele é absurdamente rico, dono de um poder político imenso nos bastidores e, convenhamos, jovem e incrivelmente bonito. Qualquer cara na posição dele seria um playboy nos tabloides, mas ele é exatamente o oposto.</p>
+                            <p>O cara é um recluso. Ele some por meses sem deixar rastros. Ele não gasta dinheiro com absolutamente nada que seja "normal" para um bilionário: sem mansões luxuosas exibidas na mídia, sem carros exóticos, sem festas.</p>
+                            <p>Fui vasculhar os registros públicos financeiros que estão disponíveis. Toda a grana que sai das contas pessoais dele vai, sem falta, para uma única instituição "filantrópica" extremamente obscura que eu não consigo achar o endereço físico e nem a área de atuação exata.</p>
+                            <p>Como alguém acumula tanta influência política e dinheiro e, ao mesmo tempo, vive nas sombras investindo quase tudo em algo secreto? Isso me dá muitos calafrios.</p>
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-item">💬 310 Comentários</div>
+                            <div class="action-item">↪ Compartilhar</div>
+                            <div class="action-item">⭐ Salvar</div>
                         </div>
                     </div>
                 </div>
 
+                <div class="comments-section">
+                    <div class="comments-header">Ordenado por: <strong>Melhores</strong></div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#e91e63;">D</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/DetetiveVirtual</span> • <span>1 dia atrás</span></div>
+                            <div class="comment-text">Eu achei que era o único que tinha notado! Já tentei puxar a capivara dessa tal instituição. Os sites deles caem assim que você tenta rastrear o IP. E aquele olhar do Lázaro nas raras entrevistas que ele deu... parece que ele nem pisca.</div>
+                            <div class="comment-actions"><span>▲ 512 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#8bc34a;">L</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/LuzNoFimDoTunel</span> • <span>23 horas atrás</span></div>
+                            <div class="comment-text">Vocês viajam demais. O cara é só "old money" excêntrico que preza pela privacidade. Só porque alguém não quer ser um influenciador fútil no Instagram, vocês já acham que é o anticristo ou sei lá o quê. Deixem o cara doar o dinheiro dele em paz.</div>
+                            <div class="comment-actions"><span>▲ 105 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- RESULTADO 2: ÉDEN, JARDIM OU GÊNESIS -->
+            <div id="post-eden" class="thread-view" style="display: none;">
+                <div class="post">
+                    <div class="vote-column">
+                        <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
+                        <span class="vote-count">840</span>
+                        <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <a href="#" class="community-name">c/MisteriosNaoResolvidos</a>
+                            <span>•</span>
+                            <span>Postado por u/CaminhanteCético há 1 semana</span>
+                        </div>
+                        
+                        <h1 class="post-title">O mito de que o Jardim do Éden é um lugar físico anômalo... É sério que tem gente que acredita nisso?</h1>
+                        
+                        <div class="post-body">
+                            <p>Recentemente, tenho tropeçado em vários fóruns da deep web e canais de Telegram discutindo a teoria bizarra de que o Jardim do Éden e o Gênesis não são apenas metáforas religiosas, mas sim registros de um local físico e real que ainda existe escondido na Terra.</p>
+                            <p>O que mais me impressiona é a riqueza de detalhes que o pessoal inventa. Falam que é um lugar com propriedades anômalas e místicas, onde a flora não envelhece, as leis da física quebram e o espaço-tempo funciona de um jeito distorcido. Dizem que há governos que conhecem a localização, mas colocam bloqueios militares disfarçados.</p>
+                            <p>Honestamente, isso pra mim soa claramente fake. Parece muito o roteiro de uma creepypasta elaborada estilo SCP ou as Backrooms que fugiu do controle. Mas a convicção com que as pessoas discutem coordenadas e "relatos de testemunhas" chega a assustar.</p>
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-item">💬 218 Comentários</div>
+                            <div class="action-item">↪ Compartilhar</div>
+                            <div class="action-item">⭐ Salvar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <div class="comments-header">Ordenado por: <strong>Polêmicos</strong></div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#f44336;">Z</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/Zelote_Raiz</span> • <span>5 dias atrás</span></div>
+                            <div class="comment-text">Você pode achar que é fake até o dia que ver as fotos dos supostos "guardiões". Quem procura, acha, OP. Há coisas mais antigas que a humanidade protegendo aquele lugar, a espada flamejante não é só uma historinha de ninar.</div>
+                            <div class="comment-actions"><span>▲ 34 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#03a9f4;">B</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/BackroomExplorer</span> • <span>6 dias atrás</span></div>
+                            <div class="comment-text">Concordo com o OP, é só uma histeria coletiva da internet. O pessoal pega folclore antigo e mistura com essa estética de "anomalias" que tá na moda. Nada demais.</div>
+                            <div class="comment-actions"><span>▲ 180 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTADO 3: HOTEL MORO, ANJOS, ETC -->
+            <div id="post-hotel" class="thread-view" style="display: none;">
+                <div class="post">
+                    <div class="vote-column">
+                        <button class="vote-btn upvote" onclick="toggleVote(this, 1)">▲</button>
+                        <span class="vote-count">4.8k</span>
+                        <button class="vote-btn downvote" onclick="toggleVote(this, -1)">▼</button>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <a href="#" class="community-name">c/RelatosParanormais</a>
+                            <span>•</span>
+                            <span>Postado por u/Explorador_UrbEX há 3 dias</span>
+                        </div>
+                        
+                        <h1 class="post-title">Sobrevivi a uma noite no Hotel Moro. Vi anjos, e eles são a coisa mais aterrorizante do mundo.</h1>
+                        
+                        <div class="post-body">
+                            <p>Ainda estou tremendo e com febre enquanto escrevo isso. Fui investigar os boatos de assombração do Hotel Moro abandonado. Todo mundo dizia que era perigoso, mas eu achei que fossem só noias locais. Eu estava errado, e muito.</p>
+                            <p>Logo de madrugada, as coisas começaram a mudar. Os corredores do hotel começaram a se alterar de lugar, como se o prédio tivesse vida própria e uma geometria que não fazia sentido. Tentei achar a saída e vi, no fim do corredor, um homem vestindo uma máscara de coelho apodrecida, apenas parado, apontando para uma porta.</p>
+                            <p>O que estava atrás dessa porta foi o que me quebrou por dentro. Havia 3 seres enormes. Eles usavam armaduras surradas. Eu não consegui ver a aparência deles direito porque olhar diretamente para eles fazia meus olhos arderem e minha mente latejar, mas eles passavam uma "vibe" extremamente angelical, divina e intocável... porém, de uma forma completamente profana. Eles pareciam Filhos do Éden corrompidos, algum tipo de experimento doentio misturando o sagrado com o hediondo.</p>
+                            <p>Eu só comecei a correr. Corri enquanto escutava o som de metal batendo no chão atrás de mim, e monstros rastejando pelo teto do corredor deformado. Eu saí de lá pela manhã, sem saber como achei a rua. Nunca vão lá.</p>
+                        </div>
+
+                        <div class="post-actions">
+                            <div class="action-item">💬 642 Comentários</div>
+                            <div class="action-item">↪ Compartilhar</div>
+                            <div class="action-item">⭐ Salvar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <div class="comments-header">Ordenado por: <strong>Melhores</strong></div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#00bcd4;">T</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/The_Archivist</span> • <span>2 dias atrás</span></div>
+                            <div class="comment-text">Você viu os Três Guerreiros... e saiu vivo. OP, você tem muita sorte de não ter tentado falar com o homem da máscara de coelho. Dizem que ele é quem seleciona as "oferendas" pros corredores vivos. Procure um médico, a radiação nesses locais anômalos costuma dar febre.</div>
+                            <div class="comment-actions"><span>▲ 850 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-avatar" style="background:#ff9800;">M</div>
+                        <div class="comment-content">
+                            <div class="comment-meta"><span class="comment-author">u/MedoProfundo</span> • <span>2 dias atrás</span></div>
+                            <div class="comment-text">"Experimentos misturando sagrado com o hediondo". Isso descreve perfeitamente o que a Bíblia relata sobre os Nephilim em alguns textos apócrifos. O Hotel Moro foi construído em cima de terras condenadas, a história daquela cidade é apagada. O que quer que sejam aqueles anjos, eles não servem a Deus.</div>
+                            <div class="comment-actions"><span>▲ 612 ▼</span> <span>Responder</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
+        // Função original de Votos mantida 100% igual
         function toggleVote(button, type) {
             const container = button.parentElement;
             const countSpan = container.querySelector('.vote-count');
@@ -456,6 +633,72 @@
                 }
             }
         }
+
+        // --- SISTEMA DE PESQUISA ADICIONADO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            
+            // Pega as "views" de cada post
+            const views = {
+                original: document.getElementById('post-original'),
+                lazaro: document.getElementById('post-lazaro'),
+                eden: document.getElementById('post-eden'),
+                hotel: document.getElementById('post-hotel')
+            };
+            
+            const errorMsg = document.getElementById('search-error');
+
+            function hideAllViews() {
+                Object.values(views).forEach(view => {
+                    view.style.display = 'none';
+                });
+                errorMsg.style.display = 'none';
+            }
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    // Normaliza a busca: minúsculo e remove acentos
+                    const query = searchInput.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                    
+                    hideAllViews();
+
+                    if (query === '') {
+                        views.original.style.display = 'block';
+                        return;
+                    }
+
+                    // Verifica palavras-chave
+                    if (query.includes('lazaro')) {
+                        views.lazaro.style.display = 'block';
+                    } 
+                    else if (query.includes('eden') || query.includes('jardim') || query.includes('genesis')) {
+                        views.eden.style.display = 'block';
+                    } 
+                    else if (query.includes('filho do eden') || query.includes('anjo') || query.includes('experimento') || query.includes('hotel moro')) {
+                        views.hotel.style.display = 'block';
+                    } 
+                    else {
+                        // Caso a pesquisa não bata com os termos pedidos
+                        errorMsg.style.display = 'block';
+                        views.original.style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        // Clicar na logo reseta para a página inicial
+        function resetView() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = '';
+            
+            document.getElementById('post-original').style.display = 'block';
+            document.getElementById('post-lazaro').style.display = 'none';
+            document.getElementById('post-eden').style.display = 'none';
+            document.getElementById('post-hotel').style.display = 'none';
+            document.getElementById('search-error').style.display = 'none';
+        }
     </script>
 </body>
 </html>
+
+```
